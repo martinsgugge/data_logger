@@ -11,15 +11,16 @@ class SubHandler(object):
     """
     Client to subscription. It will receive events from server
     """
-    psql = psql(xmlfile='./DBconnection.xml')
-    t = TicToc()
-    print(type(psql))
+
+    sql = psql(xmlfile='./DBconnection_azure.xml')
     def __init__(self, id):
         self.id = id
     def datachange_notification(self, node, val, data):
-        self.t.tic()
-        self.psql.send_q("""insert into measurement values (%s, %s, %s)""", (self.id, dt.datetime.now(), val))
-        self.t.toc()
+        if not self.sql.connected:
+            self.sql = psql(xmlfile='./DBconnection_azure.xml')
+        self.sql.send_q("""select insert_measurement(%s, %s, %s);""", (self.id, dt.datetime.now(), val))
+        print(val)
+
     def event_notification(self, event):
         print("Python: New event", event)
 

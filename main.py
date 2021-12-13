@@ -13,3 +13,5 @@ except KeyboardInterrupt:
     opc_tt.disconnect()
     opc_u.delete_subscribtion()
     opc_u.disconnect()
+    opc_tt.handler.sql.disconnect()
+    opc_u.handler.sql.disconnect()
